@@ -1,0 +1,12 @@
+{% extends 'layout_unlogged.html' %}
+
+{% block title_unlogged %}Word Salad | Register{% endblock %}
+
+{% block body %}
+    <h1>Register a new user</h1>
+    <form action="/users/register" method="post" class="form-w-validation">
+        {% csrf_token %}
+        {{ form }}
+        <button type="submit" class="primary-btn">Submit</button>
+    </form>
+{% endblock %}

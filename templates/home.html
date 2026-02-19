@@ -1,0 +1,14 @@
+{% extends 'layout_unlogged.html' %}
+
+{% block title_unlogged %}Word Salad | Home{% endblock %}
+
+{% block body %}
+    <div class="home">
+        <h1>Welcome to <span class="emphasis">Word Salad</span></h1>
+        <p>Keep track of your writing projects and the words you've written for them!</p>
+        <div class="btn-ctn">
+            <a href="{% url 'users:register' %}" class="link-btn  primary-btn">Register</a>
+            <a href="{% url 'users:login' %}" class="link-btn  primary-btn">Login</a>
+        </div>
+    </div>
+{% endblock %}

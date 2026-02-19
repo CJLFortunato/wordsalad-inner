@@ -1,0 +1,15 @@
+{% extends 'layout.html' %}
+
+{% block title %} Create a project {% endblock %}
+
+{% block content %}
+    <section>
+        <h1>Create a project</h1>
+        <form method="post" class="form-w-validation" action="{% url 'projects:create_project' %}">
+            {% csrf_token %}
+            {{ form }}
+            <button type="submit" class="primary-btn">Create</button>
+        </form>
+    </section>
+
+{% endblock %}

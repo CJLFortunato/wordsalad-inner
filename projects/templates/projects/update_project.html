@@ -1,0 +1,15 @@
+{% extends 'layout.html' %}
+
+{% block title %} Update a project {% endblock %}
+
+{% block content %}
+    <section>
+        <h1>Update a project</h1>
+        <form method="post" class="form-w-validation" action="{% url 'projects:update_project' prj_id=project_id %}">
+            {% csrf_token %}
+            {{ form }}
+            <button type="submit" class="primary-btn">Update</button>
+        </form>
+    </section>
+
+{% endblock %}

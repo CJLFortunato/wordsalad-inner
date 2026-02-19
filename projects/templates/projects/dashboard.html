@@ -1,0 +1,97 @@
+{% extends 'layout.html' %}
+
+{% block title %} WordSalad | Dashboard {% endblock %}
+
+{% block script %}
+    <script>
+        window.addEventListener("load", (event) => {
+            const chart = new CanvasJS.Chart("chartContainer",{
+                theme: "dark2",
+                animationEnabled: false,
+                exportEnabled: false,
+                backgroundColor: 'transparent',
+                height: 395,
+                data: [{
+                    type: "doughnut",
+                    indexLabel: "{y}",
+                    indexLabelPlacement: 'inside',
+                    indexLabelFontColor: "hsl(220, 12%, 7%)",
+                    indexLabelFontSize: 24,
+                    indexLabelFontWeight: 700,
+                    explodeOnClick: false,
+                    yValueFormatString: "#,##",
+                    startAngle: 90,
+                    highlightEnabled: false,
+                    dataPoints: {{ chart_data|safe }}
+                }],
+                toolTip: {
+                    enabled: false,
+                },
+            });
+            chart.render();
+        });
+    </script>
+{% endblock %}
+
+{% block content %}
+    <div class="dashboard-ctn">
+        <section class="donut-chart">
+            <div id="chartContainer" style="width: 100%; height: 360px;"></div>
+        </section>
+        <section class="progress-form-dbd">
+            <h2>Log your progress</h2>
+            <form action="/projects/dashboard" method="post" class="form-w-validation-hr">
+                {% csrf_token %}
+                {{ form }}
+                <button type="submit" class="primary-btn">Submit</button>
+            </form>
+        </section>
+        <section class="statistics">
+            <div class="stats-ctn">
+            <div>
+                <h2>Your most recent progress log</h2>
+                <p>
+                    <span class="statistics-emphasis">
+                        {{ most_recent_progress.project_id.name }}
+                    </span> with <span class="statistics-emphasis" style="color: {{ most_recent_progress.color }};">
+                        {{ most_recent_progress.word_count }}
+                    </span> words
+                </p>
+            </div>
+            <div>
+                <h2>Your biggest project</h2>
+                <p>
+                    <span class="statistics-emphasis">
+                        {{ most_advanced_project.project_id.name }}
+                    </span> with <span class="statistics-emphasis" style="color: {{ most_advanced_project.color }};">
+                        {{ most_advanced_project.word_count }}
+                    </span> words
+                </p>
+            </div>
+        </div>
+        <p class="encouragments">Congratulations on your hard work!</p>
+        </section>
+        <section class="projects-list">
+            <div class="title-ctn">
+                <h2>Projects</h2>
+                <a href="{% url 'projects:create_project' %}" class="link-btn primary-btn">Create project</a>
+            </div>
+            <ul class="projects-ctn">
+                {% for project in projects %}
+                    <li class="project-item">
+                        <h3>
+                            <a href="{% url 'projects:project' prj_id=project.id %}">{{ project.name }}</a>
+                        </h3>
+                        <p>{{project.word_count}}/{{project.target_count}} words</p>
+                        <div class="bar-ctn" title="{{ project.percentage}}%">
+                            <div
+                                class="bar"
+                                style="width:{{ project.percentage }}%;max-width: 100%;background-color: {{ project.color }};"
+                            />
+                        </div>
+                    </li>
+                {% endfor %}
+            </ul>
+        </section>
+    </div>
+{% endblock %}

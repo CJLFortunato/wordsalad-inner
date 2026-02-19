@@ -1,0 +1,85 @@
+{% extends 'layout.html' %}
+
+{% block title %} {{ project.name }} {% endblock %}
+
+{% block script %}
+    <script>
+        window.onload = function () {
+
+            const chart = new CanvasJS.Chart("chartContainer", {
+                theme: "dark2",
+                exportEnabled: false,
+                animationEnabled: false,
+                backgroundColor: 'transparent',
+                height: 345,
+                title: {
+                    text: "Progress"
+                },
+                axisY: {
+                    title: "Words typed",
+                    minimum: 0,
+                    maximum: Math.max({{ project.target_count }}, {{ most_recent_count.word_count }}),
+                    gridColor: "hsl(220, 12%, 20%)",
+                    tickColor: "hsl(220, 12%, 20%)",
+                },
+                data: [{
+                    type: "line",
+                    dataPoints: {{ datapoints|safe }}
+                }]
+            });
+
+            chart.render();
+        }
+    </script>
+{% endblock %}
+
+{% block content %}
+
+    <h1>{{ project.name }}</h1>
+    <div class="project-ctn">
+        <section class="project-progress-bar">
+            <div class="bar-ctn">
+                <div class="bar" style="width:{{ percentage }}%;max-width: 100%;background-color: {{ color }};"></div>
+            </div>
+                <p class="percentage" style="color: {{ color }};">{{ percentage }}%</p>
+            <p class="word-count">
+                {% if  most_recent_count is None%}
+                    <strong style="color: {{ color }};">0</strong>
+                {% else %}
+                    <strong style="color: {{ color }};">{{ most_recent_count.word_count }}</strong>
+                {% endif %}
+                of <strong>{{ project.target_count }}</strong> words written
+            </p>
+        </section>
+        <section class="progress-form-prj">
+            <h2>Log your progress</h2>
+            <form action="/projects/{{ project.id }}" method="post" class="form-w-validation-hr">
+                {% csrf_token %}
+                {{ form }}
+                <button type="submit" class="primary-btn">Submit</button>
+            </form>
+        </section>
+        <section class="project-summary">
+            <p>{{ project.insertion_date }}</p>
+            <p>{{ project.type_id}}</p>
+            <p>{% for genre in genres %} <span>{{ genre }}</span> {% endfor %}</p>
+            <p>{{ project.summary }}</p>
+            <a href="{% url 'projects:update_project' prj_id=project.id %}" class="link-btn primary-btn">Update</a>
+        </section>
+        <section class="progress-chart">
+            <div id="chartContainer" style="height: 360px; width: 100%;"></div>
+        </section>
+        <section class="project-log">
+            <h2>Progress Log</h2>
+            <ul>
+                {% for item in progress %}
+                    <li class="project-item">
+                        {{ item.insertion_date }}
+                        {{ item.word_count }} words
+                    </li>
+                {% endfor %}
+            </ul>
+        </section>
+    </div>
+
+{% endblock %}

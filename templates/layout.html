@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://kit.fontawesome.com/ca9ca94b48.js" crossorigin="anonymous"></script>
+    {% block script %}
+    {% endblock %}
+    <title>
+        {% block title %}
+            Word Salad
+        {% endblock %}
+    </title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <script src="{% static 'js/canvasjs.min.js' %}"></script>
+</head>
+<body>
+    <aside>
+        <header>
+            <p><i class="fa-solid fa-spa"></i></p>
+        </header>
+        <nav>
+            <a href="{% url 'projects:dashboard' %}" alt="Dashboard" title="Dashboard"><i class="fa-solid fa-table-columns"></i></a>
+            <a href="{% url 'projects:create_project' %}" alt="create project" title="Create project"><i class="fa-solid fa-square-plus"></i></a>
+        </nav>
+        <nav>
+            <a href="{% url 'users:manage' %}" alt="Manage user" title="Manage user"><i class="fa-regular fa-circle-user"></i></i></a>
+        </nav>
+        <form class="logout" action="{% url 'users:logout' %}" method="POST">
+            {% csrf_token %}
+            <button class="logout-btn" alt="logout" title="Logout"><i class="fa-solid fa-arrow-right-from-bracket"></i></button>
+        </form>
+    </aside>
+    <main>
+        {% block content %}
+        {% endblock %}
+    </main>
+</body>
+</html>
